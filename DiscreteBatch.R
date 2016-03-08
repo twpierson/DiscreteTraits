@@ -28,7 +28,7 @@ print(parsimony.score)
 
 #Can you estimate the number of changes under a likelihood-based model? 
 
-#Well, we could look at branches where the reconstructed state changed from one end to the other. But that's not really a great approach: at best, it will underestimate the number of changes. A better approach is to use stochastic character mapping.
+#Well, we could look at branches where the reconstructed state changed from one end to the other. But that's not really a great approach: at best, it will underestimate the number of changes (we could have a change on a branch, then a change back, for example). A better approach is to use stochastic character mapping.
 
 estimated.histories <- make.simmap(tree, cleaned.discrete, model="ARD", nsim=5)
 
@@ -37,3 +37,8 @@ plotSimmap(estimated.histories)
 
 counts <- countSimmap(estimated.histories)
 print(counts)
+
+#Depending on your biological question, investigate additional approaches:
+#  As in the correlation week, where hypotheses were examined by constraining rate matrices, one can constrain rates to examine hypotheses. corHMM, ape, and other packages have ways to address this.
+#  Rates change over time, and this could be relevant to a biological question: have rates sped up post KT, for example. Look at the models in geiger for ways to do this.
+#  You might observe rates for one trait but it could be affected by some other trait: you only evolve wings once on land, for example. corHMM can help investigate this.
