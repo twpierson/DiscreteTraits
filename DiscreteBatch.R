@@ -4,20 +4,22 @@ tree <- read.tree("Eurycea_Tree")
 
 discrete.1<-round(runif(length(tree$tip.label)))
 discrete.2<-round(runif(length(tree$tip.label)))
-discrete.data <- data.frame(discrete.1,discrete.2)
-rownames(discrete.data) <- tree$tip.label
+names(discrete.1) <- tree$tip.label
+names(discrete.2) <- tree$tip.label
+# discrete.data <- data.frame(discrete.1,discrete.2) # In case I later want to put these data in a dataframe together.
+# row.names(discrete.data) <- tree$tip.label # In case I later want to put these data in a dataframe together.
 
-cleaned.discrete <- CleanData(tree, discrete.data)
+cleaned.discrete <- CleanData(tree, discrete.1)
 
 VisualizeData(cleaned.discrete)
 
 #First, let's use parsimony to look at ancestral states
-cleaned.discrete.phyDat <- phyDat(discrete.1, type="USER",levels=c(0,1)) #phyDat is a data format used by phangorn
+cleaned.discrete.phyDat <- phyDat(cleaned.discrete$data, type="USER",levels=c(0,1)) #phyDat is a data format used by phangorn
 anc.p <- ancestral.pars(tree, cleaned.discrete.phyDat)
 plotAnc(tree, anc.p, 1)
 
 #Do you see any uncertainty? What does that meean for parsimony?
-# There is uncertainty at the nodes. It means that there are multiple, equally 'likely'
+# There is uncertainty at some of the nodes. It means that there are multiple, equally 'likely'
 # (i.e., smallest number of changes) ways to reconstruct these states.
 
 #now plot the likelihood reconstruction

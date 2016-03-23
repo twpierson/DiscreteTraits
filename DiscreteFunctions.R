@@ -10,12 +10,11 @@ library(phangorn)
 VisualizeData <- function(data) {
 	#Important here is to LOOK at your data before running it. Any weird values? Does it all make sense? What about your tree? Polytomies?
   pdf("Visualize.pdf")
-  par(mfrow=c(1,3))
+  par(mfrow=c(1,2))
   plot(data[[1]])
-  hist(data[[2]][,1])
-  hist(data[[2]][,2])
+  hist(data[[2]])
   dev.off()
-  }
+}
 
 CleanData <- function(phy, data) {
 	#treedata() in Geiger is probably my favorite function in R.
