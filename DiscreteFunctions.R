@@ -6,7 +6,6 @@ library(phangorn)
 
 #You can use code you wrote for the correlation exercise here.
 
-
 VisualizeData <- function(data) {
 	#Important here is to LOOK at your data before running it. Any weird values? Does it all make sense? What about your tree? Polytomies?
   pdf("Visualize.pdf")

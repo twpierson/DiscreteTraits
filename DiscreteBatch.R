@@ -1,20 +1,31 @@
 #You can use code you wrote for the correlation exercise here.
 source("DiscreteFunctions.R")
+
+setwd("~/Desktop/UTK/Spring_2016/PhyloMeth/DiscreteTraits")
 tree <- read.tree("Eurycea_Tree")
 
-discrete.1<-round(runif(length(tree$tip.label)))
-discrete.2<-round(runif(length(tree$tip.label)))
-names(discrete.1) <- tree$tip.label
-names(discrete.2) <- tree$tip.label
+# Here I'm simulating a discrete trait.
+q <- list(rbind(c(-12,12), c(12,-12)))
+dsims <- sim.char(tree, q, model='discrete', n=1)
+
+# Here I'm reformatting those trait data so that they work in downstream analyses. The format they were in had a weird string of text at the top that was causing problems.
+new.discrete <- as.vector(dsims)
+names(new.discrete) <- row.names(dsims)
+
+# Below is the old way that I was generating fake data, but it was producing nonsensical results. So I'm not doing that anymore.
+# discrete.1<-round(runif(length(tree$tip.label)))
+# discrete.2<-round(runif(length(tree$tip.label)))
+# names(discrete.1) <- tree$tip.label
+# names(discrete.2) <- tree$tip.label
 # discrete.data <- data.frame(discrete.1,discrete.2) # In case I later want to put these data in a dataframe together.
 # row.names(discrete.data) <- tree$tip.label # In case I later want to put these data in a dataframe together.
 
-cleaned.discrete <- CleanData(tree, discrete.1)
+cleaned.discrete <- CleanData(tree, new.discrete)
 
 VisualizeData(cleaned.discrete)
 
 #First, let's use parsimony to look at ancestral states
-cleaned.discrete.phyDat <- phyDat(cleaned.discrete$data, type="USER",levels=c(0,1)) #phyDat is a data format used by phangorn
+cleaned.discrete.phyDat <- phyDat(cleaned.discrete$data, type="USER",levels=c(1,2)) #phyDat is a data format used by phangorn
 anc.p <- ancestral.pars(tree, cleaned.discrete.phyDat)
 plotAnc(tree, anc.p, 1)
 
@@ -41,7 +52,7 @@ print(parsimony.score)
 
 #Well, we could look at branches where the reconstructed state changed from one end to the other. But that's not really a great approach: at best, it will underestimate the number of changes (we could have a change on a branch, then a change back, for example). A better approach is to use stochastic character mapping.
 
-estimated.histories <- make.simmap(tree, discrete.1, model="ARD", nsim=5)
+estimated.histories <- make.simmap(tree, new.discrete, model="ARD", nsim=5)
 
 #always look to see if it seems reasonable
 plotSimmap(estimated.histories)
